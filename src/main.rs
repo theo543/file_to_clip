@@ -1,5 +1,10 @@
+#![windows_subsystem = "windows"]
+
 use std::process::ExitCode;
 use std::io::Write;
+use std::os::windows::process::CommandExt;
+
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 #[cfg(target_os = "windows")]
 fn main() -> ExitCode {
@@ -14,6 +19,7 @@ fn main() -> ExitCode {
     let content = std::fs::read_to_string(&args[1]).expect("Failed to read file");
 
     let mut clip = std::process::Command::new("clip")
+        .creation_flags(CREATE_NO_WINDOW)
         .stdin(std::process::Stdio::piped())
         .spawn()
         .expect("Failed to spawn clip");
